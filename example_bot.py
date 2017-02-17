@@ -3,7 +3,7 @@ A test bot using the Python Matrix Bot API
 
 Test it out by adding it to a group chat and doing one of the following:
 1. Say "Hi"
-2. Say <botname> echo this is a test!
+2. Say !echo this is a test!
 """
 
 from matrix_bot_api.matrix_bot_api import MatrixBotAPI
@@ -37,7 +37,7 @@ def main():
     bot.add_handler(hi_handler)
 
     # Add a regex handler waiting for the echo command
-    echo_handler = MCommandHandler(USERNAME, "echo", echo_callback)
+    echo_handler = MCommandHandler("echo", echo_callback)
     bot.add_handler(echo_handler)
 
     # Start polling
