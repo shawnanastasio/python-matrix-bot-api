@@ -7,7 +7,6 @@ import re
 from matrix_bot_api.mhandler import MHandler
 
 class MatrixBotAPI:
-    instances = [] # All instantiated matrixbot apis
 
     # username - Matrix username
     # password - Matrix password
@@ -33,9 +32,6 @@ class MatrixBotAPI:
 
         # Store empty list of handlers
         self.handlers = []
-
-        # Add this instance to global instances list
-        MatrixBotAPI.instances.append(self)
 
         # If rooms is None, we should listen for invites and automatically accept them
         if rooms is None:
