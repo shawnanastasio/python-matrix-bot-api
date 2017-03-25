@@ -1,10 +1,7 @@
-from matrix_client.client import MatrixClient
-from matrix_client.api import MatrixRequestError
-from requests.exceptions import MissingSchema
 import traceback
 import re
-
-from matrix_bot_api.mhandler import MHandler
+from matrix_client.client import MatrixClient
+from matrix_client.api import MatrixRequestError
 
 
 class MatrixBotAPI:
