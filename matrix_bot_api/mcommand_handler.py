@@ -5,7 +5,9 @@ import re
 
 from matrix_bot_api.mhandler import MHandler
 
+
 class MCommandHandler(MHandler):
+
     # command  - String of command to handle
     # handle_callback - Function to call if message contains command
     # cmd_char - Character that denotes a command. '!' by default

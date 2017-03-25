@@ -6,6 +6,7 @@ import re
 
 from matrix_bot_api.mhandler import MHandler
 
+
 class MatrixBotAPI:
 
     # username - Matrix username
@@ -47,8 +48,6 @@ class MatrixBotAPI:
             for room in self.rooms:
                 room.add_listener(self.handle_message)
 
-
-
     def add_handler(self, handler):
         self.handlers.append(handler)
 
@@ -62,7 +61,6 @@ class MatrixBotAPI:
             if handler.test_callback(room, event):
                 # This handler needs to be called
                 handler.handle_callback(room, event)
-
 
     def handle_invite(self, room_id, state):
         print("Got invite to room: " + str(room_id))

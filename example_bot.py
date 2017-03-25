@@ -11,14 +11,15 @@ from matrix_bot_api.mregex_handler import MRegexHandler
 from matrix_bot_api.mcommand_handler import MCommandHandler
 
 # Global variables
-USERNAME = "" # Bot's username
-PASSWORD = "" # Bot's password
-SERVER = ""   # Matrix server URL
+USERNAME = ""  # Bot's username
+PASSWORD = ""  # Bot's password
+SERVER = ""  # Matrix server URL
 
 
 def hi_callback(room, event):
     # Somebody said hi, let's say Hi back
     room.send_text("Hi, " + event['sender'])
+
 
 def echo_callback(room, event):
     args = event['content']['body'].split()
@@ -26,6 +27,7 @@ def echo_callback(room, event):
 
     # Echo what they said back
     room.send_text(' '.join(args))
+
 
 def main():
     # Create an instance of the MatrixBotAPI
@@ -45,6 +47,7 @@ def main():
     # Infinitely read stdin to stall main thread while the bot runs in other threads
     while True:
         input()
+
 
 if __name__ == "__main__":
     main()
