@@ -8,7 +8,7 @@ setup(
     author='Shawn Anastasio',
     author_email='see github',
     url='https://github.com/shawnanastasio/python-matrix_bot_api',
-    packages=['matrix_bot_api',],
+    packages=['matrix_client',],
     install_requires=['matrix_python_sdk'],
     license='GNU GPL v3',
     summary=DESC,
