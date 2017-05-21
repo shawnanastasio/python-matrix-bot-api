@@ -1,6 +1,6 @@
 python-matrix-bot-api
 =====================
-A Python API for making Matrix bots (https://matrix.org).
+A Python 3 API for making Matrix bots (https://matrix.org).
 
 Requires the [matrix-python-sdk](https://github.com/matrix-org/matrix-python-sdk).
 
