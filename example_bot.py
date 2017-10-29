@@ -6,6 +6,8 @@ Test it out by adding it to a group chat and doing one of the following:
 2. Say !echo this is a test!
 """
 
+import random
+
 from matrix_bot_api.matrix_bot_api import MatrixBotAPI
 from matrix_bot_api.mregex_handler import MRegexHandler
 from matrix_bot_api.mcommand_handler import MCommandHandler
@@ -29,6 +31,21 @@ def echo_callback(room, event):
     room.send_text(' '.join(args))
 
 
+def dieroll_callback(room, event):
+    args = event['content']['body'].split()
+    die = args[0]
+
+    try:
+        die_max = int(die[2:])
+        if die_max <= 1 or die_max >= 1000:
+            raise ValueError
+    except ValueError:
+        return
+
+    result = random.randrange(1,die_max+1)
+    room.send_text(str(result))
+
+
 def main():
     # Create an instance of the MatrixBotAPI
     bot = MatrixBotAPI(USERNAME, PASSWORD, SERVER)
@@ -40,6 +57,10 @@ def main():
     # Add a regex handler waiting for the echo command
     echo_handler = MCommandHandler("echo", echo_callback)
     bot.add_handler(echo_handler)
+
+    # Add a regex handler waiting for the die command
+    dieroll_handler = MCommandHandler("d", dieroll_callback)
+    bot.add_handler(dieroll_handler)
 
     # Start polling
     bot.start_polling()
