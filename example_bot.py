@@ -4,6 +4,7 @@ A test bot using the Python Matrix Bot API
 Test it out by adding it to a group chat and doing one of the following:
 1. Say "Hi"
 2. Say !echo this is a test!
+3. Say !d6 to get a random size-sided die roll result
 """
 
 import random
@@ -32,16 +33,25 @@ def echo_callback(room, event):
 
 
 def dieroll_callback(room, event):
+    # someone wants a random number
     args = event['content']['body'].split()
-    die = args[0]
 
-    try:
-        die_max = int(die[2:])
-        if die_max <= 1 or die_max >= 1000:
-            raise ValueError
-    except ValueError:
+    # we only care about the first arg, which has the die
+    die = args[0]
+    die_max = die[2:]
+
+    # ensure the die is a positive integer
+    if not die_max.isdigit():
+        room.send_text('{} is not a positive number!'.format(die_max))
         return
 
+    # and ensure it's a reasonable size, to prevent bot abuse
+    die_max = int(die_max)
+    if die_max <= 1 or die_max >= 1000:
+        room.send_text('dice must be between 1 and 1000!')
+        return
+
+    # finally, send the result back
     result = random.randrange(1,die_max+1)
     room.send_text(str(result))
 
@@ -58,7 +68,7 @@ def main():
     echo_handler = MCommandHandler("echo", echo_callback)
     bot.add_handler(echo_handler)
 
-    # Add a regex handler waiting for the die command
+    # Add a regex handler waiting for the die roll command
     dieroll_handler = MCommandHandler("d", dieroll_callback)
     bot.add_handler(dieroll_handler)
 
