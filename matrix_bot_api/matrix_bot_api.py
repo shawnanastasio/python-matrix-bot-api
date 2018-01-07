@@ -73,3 +73,4 @@ class MatrixBotAPI:
     def start_polling(self):
         # Starts polling for messages
         self.client.start_listener_thread()
+        return self.client.sync_thread
