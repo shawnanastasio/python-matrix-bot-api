@@ -57,7 +57,10 @@ class MatrixBotAPI:
         for handler in self.handlers:
             if handler.test_callback(room, event):
                 # This handler needs to be called
-                handler.handle_callback(room, event)
+                try:
+                    handler.handle_callback(room, event)
+                except:
+                    traceback.print_exc()
 
     def handle_invite(self, room_id, state):
         print("Got invite to room: " + str(room_id))
