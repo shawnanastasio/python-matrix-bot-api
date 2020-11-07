@@ -25,25 +25,48 @@ class MatrixBotAPI:
             print("Invalid server URL")
             traceback.print_exc()
 
-        # Store allowed rooms
-        self.rooms = rooms
-
         # Store empty list of handlers
         self.handlers = []
 
-        # If rooms is None, we should listen for invites and automatically accept them
+        # If rooms is None, we should listen for invites
+        # and automatically accept them
+        self.rooms = []
+        
+        # Store allowed room ids
+        self.room_ids = []
         if rooms is None:
             self.client.add_invite_listener(self.handle_invite)
-            self.rooms = []
 
-            # Add all rooms we're currently in to self.rooms and add their callbacks
+            # Add all rooms we're currently in to self.rooms
+            # and add their callbacks
             for room_id, room in self.client.get_rooms().items():
                 room.add_listener(self.handle_message)
-                self.rooms.append(room_id)
+                self.rooms.append(room)
+                self.room_ids.append(room_id)
         else:
+            self.client.add_invite_listener(self.handle_invite)
+
             # Add the message callback for all specified rooms
-            for room in self.rooms:
-                room.add_listener(self.handle_message)
+            for room in rooms:
+                try:
+                    # If room is a string we assume it is a room_id
+                    # Otherwise, we assume it a room object for backwards
+                    # compatibility sake.
+                    if isinstance(room, str):
+                        _room = self.client.join_room(room)
+
+                    else:
+                        _room = room
+
+                    _room.add_listener(self.handle_message)
+                    self.rooms.append(_room)
+                    self.room_ids.append(_room.room_id)
+
+                except MatrixRequestError as error:
+                    print(error)
+                    if error.code == 403:
+                        print('You likely need to invite the bot')
+
 
     def add_handler(self, handler):
         self.handlers.append(handler)
@@ -64,14 +87,18 @@ class MatrixBotAPI:
 
     def handle_invite(self, room_id, state):
         print("Got invite to room: " + str(room_id))
-        print("Joining...")
-        room = self.client.join_room(room_id)
+        if self.room_ids is None or room_id in self.room_ids:
+            print("Joining...")
+            room = self.client.join_room(room_id)
 
-        # Add message callback for this room
-        room.add_listener(self.handle_message)
+            # Add message callback for this room
+            room.add_listener(self.handle_message)
 
-        # Add room to list
-        self.rooms.append(room)
+            # Add room to list
+            self.rooms.append(room)
+
+        else:
+            print("Room not in allowed rooms list")
 
     def start_polling(self):
         # Starts polling for messages
