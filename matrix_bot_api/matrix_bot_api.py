@@ -10,20 +10,23 @@ class MatrixBotAPI:
     # password - Matrix password
     # server   - Matrix server url : port
     # rooms    - List of rooms ids to operate in, or None to accept all rooms
-    def __init__(self, username, password, server, rooms=None):
+    # token    - Optional token, if set password is ignored and username is
+    #            asumed to be a user_id (@<username>:<domain>)
+    def __init__(self, username, password, server, rooms=None, token=None):
         self.username = username
 
         # Authenticate with given credentials
-        self.client = MatrixClient(server)
-        try:
-            self.client.login_with_password(username, password)
-        except MatrixRequestError as e:
-            print(e)
-            if e.code == 403:
-                print("Bad username/password")
-        except Exception as e:
-            print("Invalid server URL")
-            traceback.print_exc()
+        self.client = MatrixClient(server, user_id=username, token=token)
+        if token is None:
+            try:
+                self.client.login_with_password(username, password)
+            except MatrixRequestError as e:
+                print(e)
+                if e.code == 403:
+                    print("Bad username/password")
+            except Exception as e:
+                print("Invalid server URL")
+                traceback.print_exc()
 
         # Store allowed rooms
         self.rooms = rooms
